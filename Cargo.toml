@@ -1,0 +1,13 @@
+[package]
+name = "chrf"
+version = "1.0.0"
+edition = "2021"
+authors = ["Jan Bujak <j@exia.io>"]
+repository = "https://github.com/koute/chrf"
+homepage = "https://github.com/koute/chrf"
+documentation = "https://docs.rs/chrf/*/chrf/"
+license = "MIT/Apache-2.0"
+readme = "README.md"
+description = "Rust implementation of the chrF algorithm"
+
+[dependencies]
