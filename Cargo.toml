@@ -1,6 +1,6 @@
 [package]
 name = "chrf"
-version = "1.0.0"
+version = "1.1.0"
 edition = "2021"
 authors = ["Jan Bujak <j@exia.io>"]
 repository = "https://github.com/koute/chrf"
