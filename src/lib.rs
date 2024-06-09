@@ -41,7 +41,7 @@ where
 }
 
 macro_rules! impl_ngrams {
-    ($(($name:ident = $width:expr, $next:ident))*) => {
+    ($(($name:ident = $width:expr, $next:ident, [$($inner:ident),*]))*) => {
         $(
             #[derive(Default, Debug)]
             pub struct $name<G = char> {
@@ -67,6 +67,50 @@ macro_rules! impl_ngrams {
                     self.feed_from(text.chars().filter(|&ch| ch != ' '))
                 }
             }
+
+            impl<G> AsRef<$name<G>> for $name<G> {
+                #[inline(always)]
+                fn as_ref(&self) -> &$name<G> {
+                    self
+                }
+            }
+
+            impl<G> AsMut<$name<G>> for $name<G> {
+                #[inline(always)]
+                fn as_mut(&mut self) -> &mut $name<G> {
+                    self
+                }
+            }
+
+            impl<G> AsRef<$next<G>> for $name<G> {
+                #[inline(always)]
+                fn as_ref(&self) -> &$next<G> {
+                    &self.next
+                }
+            }
+
+            impl<G> AsMut<$next<G>> for $name<G> {
+                #[inline(always)]
+                fn as_mut(&mut self) -> &mut $next<G> {
+                    &mut self.next
+                }
+            }
+
+            $(
+                impl<G> AsRef<$inner<G>> for $name<G> {
+                    #[inline(always)]
+                    fn as_ref(&self) -> &$inner<G> {
+                        self.next.as_ref()
+                    }
+                }
+
+                impl<G> AsMut<$inner<G>> for $name<G> {
+                    #[inline(always)]
+                    fn as_mut(&mut self) -> &mut $inner<G> {
+                        self.next.as_mut()
+                    }
+                }
+            )*
 
             impl<G> Ngrams<G> for $name<G> where G: Copy + Default + PartialEq + Eq + core::hash::Hash {
                 #[inline(always)]
@@ -144,18 +188,18 @@ macro_rules! impl_ngrams {
 }
 
 impl_ngrams! {
-    (N1 = 1, N0)
-    (N2 = 2, N1)
-    (N3 = 3, N2)
-    (N4 = 4, N3)
-    (N5 = 5, N4)
-    (N6 = 6, N5)
-    (N7 = 7, N6)
-    (N8 = 8, N7)
-    (N9 = 9, N8)
-    (N10 = 10, N9)
-    (N11 = 11, N10)
-    (N12 = 12, N11)
+    (N1 = 1, N0, [])
+    (N2 = 2, N1, [N0])
+    (N3 = 3, N2, [N1, N0])
+    (N4 = 4, N3, [N2, N1, N0])
+    (N5 = 5, N4, [N3, N2, N1, N0])
+    (N6 = 6, N5, [N4, N3, N2, N1, N0])
+    (N7 = 7, N6, [N5, N4, N3, N2, N1, N0])
+    (N8 = 8, N7, [N6, N5, N4, N3, N2, N1, N0])
+    (N9 = 9, N8, [N7, N6, N5, N4, N3, N2, N1, N0])
+    (N10 = 10, N9, [N8, N7, N6, N5, N4, N3, N2, N1, N0])
+    (N11 = 11, N10, [N9, N8, N7, N6, N5, N4, N3, N2, N1, N0])
+    (N12 = 12, N11, [N10, N9, N8, N7, N6, N5, N4, N3, N2, N1, N0])
 }
 
 /// Calculates a custom chrF score.
