@@ -1,7 +1,11 @@
 #![doc = include_str!("../README.md")]
 #![forbid(unsafe_code)]
 
+#[cfg(not(feature = "ahash"))]
 use std::collections::HashMap;
+
+#[cfg(feature = "ahash")]
+use ahash::HashMap;
 
 /// A trait representing a container for ngram counts.
 pub trait Ngrams<G = char>: Default

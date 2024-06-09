@@ -11,3 +11,8 @@ readme = "README.md"
 description = "Rust implementation of the chrF algorithm"
 
 [dependencies]
+ahash = { version = "0.8.10", default-features = false, optional = true, features = ["std", "runtime-rng"] }
+
+[features]
+default = ["ahash"]
+ahash = ["dep:ahash"]
